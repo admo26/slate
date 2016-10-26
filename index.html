@@ -119,17 +119,109 @@
       <div class="content">
         <h1 id="introduction">Introduction</h1>
 
-<p>Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.</p>
-
-<p>We have language bindings in Shell, Ruby, and Python! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.</p>
-
-<p>This example API documentation page was created with <a href="https://github.com/tripit/slate">Slate</a>. Feel free to edit it and use it as a base for your own API&rsquo;s documentation.</p>
+<p>Our API documentation is designed to make sure you have all the information you need to integrate with Xero. If you want to jump right in, check out our getting started guide.</p>
 
 <h1 id="authentication">Authentication</h1>
 
-<blockquote>
-<p>To authorize, use this code:</p>
-</blockquote>
+<h2 id="public-applications">Public Applications</h2>
+
+<hr>
+
+<h3 id="overview">Overview</h3>
+
+<p><a name="overview"></a>Public applications use the standard 3 legged OAuth process where a user can authorise your application to have access to their Xero organisation. Public applications can either be web based or desktop/mobile installed. Access tokens expire after 30 minutes.</p>
+
+<h4 id="connecting-to-xero">Connecting to Xero</h4>
+
+<p>Below is a summary of the steps required for an end user to authorise a public application to have access to their organisation in Xero</p>
+
+<ol>
+<li> User presses a “Connect to Xero” button or something similar in the 3rd party application.</li>
+<li> User is redirected to Xero and prompted to login if they do not already have an active session.</li>
+<li> User is requested to select which Xero organisation they want to grant the application access to.</li>
+<li> Once the application is authorised, the user is redirected back to the 3rd party application, which can then start interacting with their Xero organisation using the Xero API for up to 30 minutes</li>
+</ol>
+
+<hr>
+
+<h3 id="technical-details">Technical details</h3>
+
+<p><a name="technical-details"></a></p>
+
+<h4 id="how-to-register-an-application">How to register an application</h4>
+
+<p>Any Xero user can register a public application. If you do not already have a Xero user account, <a href="https://www.xero.com/signup">sign up</a> for a free account.</p>
+
+<ol>
+<li> Login to the <a href="https://api.xero.com">Xero Developer portal</a></li>
+<li> Go to the My Applications &gt; Add Application screen to add your application.</li>
+<li> Select “Public” and enter a name for your application and the URL of your company. Find out more <a title="API Application Setup" href="http://xerodev.wpengine.com/documentation/getting-started/api-application-setup/">here</a>.</li>
+<li> Optionally you can enter a callback domain. This will be used to verify the callback url you specify when authorising is allowed.</li>
+<li> Choose save. You’ll now be shown your OAuth credentials.</li>
+</ol>
+
+<h3 id="urls-for-authorisation-and-using-the-api">URLs for authorisation and using the API</h3>
+
+<p>Xero follows the <a href="http://oauth.net/core/1.0a/">OAuth v1.0a spec</a>. The URL’s to authorize your application are:</p>
+
+<table border="0" cellspacing="0" class="apidoc-table">
+
+<tbody>
+
+<tr>
+
+<td>Get an Unauthorised Request Token:</td>
+
+<td>https://api.xero.com/oauth/RequestToken</td>
+
+</tr>
+
+<tr>
+
+<td>Redirect a user:</td>
+
+<td>https://api.xero.com/oauth/Authorize</td>
+
+</tr>
+
+<tr>
+
+<td>Swap a Request Token for an Access Token:</td>
+
+<td>https://api.xero.com/oauth/AccessToken</td>
+
+</tr>
+
+<tr>
+
+<td>Connect to the Xero API:</td>
+
+<td>https://api.xero.com/api.xro/2.0/&hellip;</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+<h3 id="callback-url">Callback URL</h3>
+
+<ul>
+<li>  When getting a request token and specifying the callback URL, the callback URL should be no more than 250 characters long.</li>
+<li>  The callback url must be within the domain specified when registering your app. <a href="../../advanced-docs/oauth-callback-domains-explained/">Learn more</a></li>
+<li>  If a callback url is not specified then the user will be given an authorisation code to enter into your application.</li>
+</ul>
+
+<h3 id="signing-requests">Signing Requests</h3>
+
+<p>All requests need to be signed using HMAC-SHA1.</p>
+
+<h4 id="access-tokens">Access Tokens</h4>
+
+<ul>
+<li>  Each access token will only last for 30 minutes.</li>
+<li>  If you want longer access to the organisation, you will need the user to re-authorize your application.</li>
+</ul>
 <pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
 
 <span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
