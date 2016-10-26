@@ -91,7 +91,7 @@
       <script src="javascripts/all.js"></script>
   </head>
 
-  <body class="index" data-languages="[&quot;xml&quot;]">
+  <body class="index" data-languages="[&quot;XML&quot;,&quot;Json&quot;]">
     <a href="#" id="nav-button">
       <span>
         NAV
@@ -101,7 +101,8 @@
     <div class="tocify-wrapper">
       <img src="images/logo.png" />
         <div class="lang-selector">
-              <a href="#" data-language-name="xml">xml</a>
+              <a href="#" data-language-name="XML">XML</a>
+              <a href="#" data-language-name="Json">Json</a>
         </div>
         <div class="search">
           <input type="text" class="search" id="input-search" placeholder="Search">
@@ -110,7 +111,7 @@
       <div id="toc">
       </div>
         <ul class="toc-footer">
-            <li><a href='#'>Sign Up for a Developer Key</a></li>
+            <li><a href='https://app.xero.com/Application/Add'>Sign Up for a Developer Key</a></li>
             <li><a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a></li>
         </ul>
     </div>
@@ -125,11 +126,9 @@
 
 <h2 id="public-applications">Public Applications</h2>
 
-<hr>
-
 <h3 id="overview">Overview</h3>
 
-<p><a name="overview"></a>Public applications use the standard 3 legged OAuth process where a user can authorise your application to have access to their Xero organisation. Public applications can either be web based or desktop/mobile installed. Access tokens expire after 30 minutes.</p>
+<p>Public applications use the standard 3 legged OAuth process where a user can authorise your application to have access to their Xero organisation. Public applications can either be web based or desktop/mobile installed. Access tokens expire after 30 minutes.</p>
 
 <h4 id="connecting-to-xero">Connecting to Xero</h4>
 
@@ -139,14 +138,10 @@
 <li> User presses a “Connect to Xero” button or something similar in the 3rd party application.</li>
 <li> User is redirected to Xero and prompted to login if they do not already have an active session.</li>
 <li> User is requested to select which Xero organisation they want to grant the application access to.</li>
-<li> Once the application is authorised, the user is redirected back to the 3rd party application, which can then start interacting with their Xero organisation using the Xero API for up to 30 minutes</li>
+<li> Once the application is authorised, the user is redirected back to the 3rd party application, which can then start interacting with their Xero organisation using the Xero API for up to 30 minutes.</li>
 </ol>
 
-<hr>
-
 <h3 id="technical-details">Technical details</h3>
-
-<p><a name="technical-details"></a></p>
 
 <h4 id="how-to-register-an-application">How to register an application</h4>
 
@@ -164,45 +159,10 @@
 
 <p>Xero follows the <a href="http://oauth.net/core/1.0a/">OAuth v1.0a spec</a>. The URL’s to authorize your application are:</p>
 
-<table border="0" cellspacing="0" class="apidoc-table">
-
-<tbody>
-
-<tr>
-
-<td>Get an Unauthorised Request Token:</td>
-
-<td>https://api.xero.com/oauth/RequestToken</td>
-
-</tr>
-
-<tr>
-
-<td>Redirect a user:</td>
-
-<td>https://api.xero.com/oauth/Authorize</td>
-
-</tr>
-
-<tr>
-
-<td>Swap a Request Token for an Access Token:</td>
-
-<td>https://api.xero.com/oauth/AccessToken</td>
-
-</tr>
-
-<tr>
-
-<td>Connect to the Xero API:</td>
-
-<td>https://api.xero.com/api.xro/2.0/&hellip;</td>
-
-</tr>
-
-</tbody>
-
-</table>
+<p>Get an Unauthorised Request Token: | https://api.xero.com/oauth/RequestToken 
+Redirect a user: | https://api.xero.com/oauth/Authorize
+Swap a Request Token for an Access Token: | https://api.xero.com/oauth/AccessToken
+Connect to the Xero API: | https://api.xero.com/api.xro/2.0/&hellip;</p>
 
 <h3 id="callback-url">Callback URL</h3>
 
@@ -442,7 +402,8 @@ Remember — a happy kitten is an authenticated kitten!
       </div>
       <div class="dark-box">
           <div class="lang-selector">
-                <a href="#" data-language-name="xml">xml</a>
+                <a href="#" data-language-name="XML">XML</a>
+                <a href="#" data-language-name="Json">Json</a>
           </div>
       </div>
     </div>
