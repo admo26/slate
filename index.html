@@ -182,36 +182,345 @@ Connect to the Xero API: | https://api.xero.com/api.xro/2.0/&hellip;</p>
 <li>  Each access token will only last for 30 minutes.</li>
 <li>  If you want longer access to the organisation, you will need the user to re-authorize your application.</li>
 </ul>
-<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
 
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
+<h1 id="accounts">Accounts</h1>
+
+<div class="api-tag">[Try in API Previewer](https://app.xero.com/Preview/Accounts)</div>
+
+<hr>
+
+<h3 id="overview">Overview</h3>
+
+<table border="0" cellspacing="0" class="apidoc-table">
+
+<tbody>
+
+<tr>
+
+<td style="width: 25%;">URL</td>
+
+<td>https://api.xero.com/api.xro/2.0/Accounts</td>
+
+</tr>
+
+<tr>
+
+<td>Methods Supported</td>
+
+<td>[GET](#GET), [PUT](#PUT), [POST](#POST), [DELETE](#DELETE)</td>
+
+</tr>
+
+<tr>
+
+<td>Description</td>
+
+<td>Allows you to create individual accounts in a Xero organisation  
+Allows you to retrieve the full chart of accounts  
+Allows you to attach files to an account  
+Allows you to archive an account  
+Allows you to update details on an account (except bank accounts)  
+Allows you to delete an account  
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+<h4 id="elements-for-accounts">Elements for Accounts</h4>
+
+<p><a name="ShowInExpenseClaims"></a></p>
+
+<table cellspacing="0" class="apidoc-table" style="vertical-align:middle">
+
+<tbody>
+
+<tr>
+
+<td colspan="2">_The following elements are **required** for creates and optional for updates_</td>
+
+</tr>
+
+<tr>
+
+<td style="width: 25%;">Code</td>
+
+<td>Customer defined alpha numeric account code e.g 200 or SALES</td>
+
+</tr>
+
+<tr>
+
+<td style="width: 25%;">Name</td>
+
+<td>Name of account</td>
+
+</tr>
+
+<tr>
+
+<td style="width: 25%;">Type</td>
+
+<td>See [Account Types](type#AccountTypes)</td>
+
+</tr>
+
+<tr>
+
+<td>BankAccountNumber</td>
+
+<td>For bank accounts only (Account Type BANK)</td>
+
+</tr>
+
+<tr>
+
+<td colspan="2">_The following elements are **optional** for creates and updates_</td>
+
+</tr>
+
+<tr>
+
+<td>Status</td>
+
+<td>Accounts with a status of ACTIVE can be updated to ARCHIVED. See [Account Status Codes](type#AccountStatusCodes)</td>
+
+</tr>
+
+<tr>
+
+<td style="width: 25%;">Description</td>
+
+<td>Description of the Account. Valid for all types of accounts except bank accounts</td>
+
+</tr>
+
+<tr>
+
+<td>Tax Type</td>
+
+<td>See [Tax Types](type#TaxTypes)</td>
+
+</tr>
+
+<tr>
+
+<td>EnablePaymentsToAccount</td>
+
+<td>Boolean - describes whether account can have payments applied to it</td>
+
+</tr>
+
+<tr>
+
+<td>ShowInExpenseClaims</td>
+
+<td>Boolean - describes whether account code is available for use with expense claims</td>
+
+</tr>
+
+<tr>
+
+<td colspan="2">_Elements returned on a GET request only_</td>
+
+</tr>
+
+<tr>
+
+<td style="width: 25%;">AccountID</td>
+
+<td>Xero identifier</td>
+
+</tr>
+
+<tr>
+
+<td>Class</td>
+
+<td>See [Account Class Types](type#AccountClassTypes)</td>
+
+</tr>
+
+<tr>
+
+<td>SystemAccount</td>
+
+<td>If this is a system account then this element is returned. See [System Account types](type#SystemAccounts). Note that non-system accounts may have this element set as either &ldquo;&rdquo; or null.</td>
+
+</tr>
+
+<tr>
+
+<td>BankAccountType</td>
+
+<td>Shown for bank accounts only. See [Bank Account types](type#BankAccountTypes)</td>
+
+</tr>
+
+<tr>
+
+<td>CurrencyCode</td>
+
+<td>Shown for bank accounts only</td>
+
+</tr>
+
+<tr>
+
+<td>ReportingCode</td>
+
+<td>Shown if set</td>
+
+</tr>
+
+<tr>
+
+<td>ReportingCodeName</td>
+
+<td>Shown if set</td>
+
+</tr>
+
+<tr>
+
+<td>HasAttachments</td>
+
+<td>boolean to indicate if an account has an attachment (read only)</td>
+
+</tr>
+
+<tr>
+
+<td>UpdatedDateUTC</td>
+
+<td>Last modified date UTC format</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+<p><a name="ShowInExpenseClaims"></p>
+
+<hr>
+
+<p></a><a name="PUT"></a>  </p>
+
+<h3 id="put-accounts">PUT Accounts</h3>
+
+<p>Use this method to create new accounts <em>Limitations</em></p>
+
+<ul>
+<li>  You can only add accounts one at a time (i.e. you&rsquo;ll need to do multiple API calls to add many accounts)</li>
+<li>  Replacing the entire chart of accounts is not currently supported. See our guide for <a href="" "http:="" devcenter.hgv.test="" documentation="" api-guides="" conversions="" "="">conversion partners</a>.</li>
+<li>  Creating credit card or Paypal accounts is not currently supported (<a href="http://xero.uservoice.com/forums/5528-xero-core-api/suggestions/9846648-create-update-credit-card-type-accounts">vote here</a>)</li>
+</ul>
+
+<h4 id="example-for-put-accounts">Example for PUT Accounts</h4>
+
+<p>1. Below is an example of creating a new sales account with the minimum elements required [code language=&ldquo;xml&rdquo;] <Account> <Code>201</Code> <Name>Sales - clearance lines</Name> <Type>SALES</Type> </Account> [/code] 2. Below is an example of creating a new asset account with the minimum elements required [code language=&ldquo;xml&rdquo;] <Account> <Code>304</Code> <Name>Clearing - EFTPOS</Name> <Type>ASSET</Type> </Account> [/code] 3. Below is an example of creating a new bank account with the minimum elements required. (Note the bank account below is an AU account. ) [code language=&ldquo;xml&rdquo;] <Account> <Name>Cheque Account</Name> <Type>BANK</Type> <BankAccountNumber>121-121-1234567</BankAccountNumber> </Account> [/code]</p>
+
+<h4 id="uploading-an-attachment">Uploading an Attachment</h4>
+
+<p>You can upload up to 10 attachments(each up to 3mb in size) per account, once the account has been created in Xero. To do this you&rsquo;ll need to know the ID of the account which you&rsquo;ll use to construct the URL when POST/PUTing a byte stream containing the attachment file. e.g. https://api.xero.com/api.xro/2.0/Accounts/<em>f0ec0d8c-6fce-4330-bb3b-8306278c6fd8</em>/Attachments/<em>image.png</em>. See the <a href="http://xerodev.wpengine.com/api/Attachments">Attachments</a> page for more details. e.g. [code language=&ldquo;xml&rdquo;] POST /api.xro/2.0/Accounts/f0ec0d8c-4330-bb3b-83062c6fd8/Attachments/Image002932.png Authorization: OAuth&hellip; Content Type: image/png Content-Length: 10293 {RAW-IMAGE-CONTENT} [/code]</p>
+
+<hr>
+
+<p><a name="POST"></a>  </p>
+
+<h3 id="post-accounts">POST Accounts</h3>
+
+<h4 id="update-accounts">Update Accounts</h4>
+
+<p>Use this method to update account details. <em>Limitations</em></p>
+
+<ul>
+<li>  Accounts of type &lsquo;BANK&rsquo; cannot be updated (<a href="http://xero.uservoice.com/forums/5528-xero-core-api/suggestions/9846648-create-update-credit-card-type-accounts">vote here</a>)</li>
+<li>  You can only update accounts one at a time (i.e. you’ll need to do multiple API calls to update many accounts)</li>
+<li>  You cannot update the status to archived (see below) when also updating other values</li>
+</ul>
+
+<h4 id="example-request-for-updating-an-account">Example request for updating an Account</h4>
+
+<p>[code language=&ldquo;xml&rdquo;] <Accounts> <Account> <AccountID>297c2dc5-cc47-4afd-8ec8-74990b8761e9</AccountID> <Code>200</Code> <Name>Sales account</Name> <Type>REVENUE</Type> <TaxType>OUTPUT2</TaxType> <Description>Income from any normal business trading activity</Description> <EnablePaymentsToAccount>false</EnablePaymentsToAccount> <ShowInExpenseClaims>false</ShowInExpenseClaims> </Account> </Accounts> [/code]</p>
+
+<h4 id="archive-accounts">Archive Accounts</h4>
+
+<p>Use this method to archive accounts.</p>
+
+<h4 id="example-request-for-archiving-an-account">Example request for archiving an Account</h4>
+<pre class="highlight plaintext"><code>&lt;Accounts&gt; &lt;Account&gt; &lt;AccountID&gt;297c2dc5-cc47-4afd-8ec8-74990b8761e9&lt;/AccountID&gt; &lt;Status&gt;ARCHIVED&lt;/Status&gt; &lt;/Account&gt; &lt;/Accounts&gt; [/code]
 </code></pre>
-<pre class="highlight python"><code><span class="kn">import</span> <span class="nn">kittn</span>
 
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-</code></pre>
-<pre class="highlight shell"><code><span class="c"># With shell, you can just pass the correct header with each request</span>
-curl <span class="s2">"api_endpoint_here"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre>
-<pre class="highlight javascript"><code><span class="kr">const</span> <span class="nx">kittn</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'kittn'</span><span class="p">);</span>
+<hr>
 
-<span class="kd">let</span> <span class="nx">api</span> <span class="o">=</span> <span class="nx">kittn</span><span class="p">.</span><span class="nx">authorize</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">);</span>
-</code></pre>
+<p><a name="GET"></a>  </p>
 
-<blockquote>
-<p>Make sure to replace <code class="prettyprint">meowmeowmeow</code> with your API key.</p>
-</blockquote>
+<h3 id="get-accounts">GET Accounts</h3>
 
-<p>Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our <a href="http://example.com/developers">developer portal</a>.</p>
+<p><strong><em>Optional parameters for GET Accounts</em></strong></p>
 
-<p>Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:</p>
+<table border="0" cellspacing="0" class="apidoc-table">
 
-<p><code class="prettyprint">Authorization: meowmeowmeow</code></p>
+<tbody>
 
-<aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
-</aside>
+<tr>
+
+<td style="width: 25%;">AccountID</td>
+
+<td>The Xero identifier for an account - specified as a string following the endpoint name  
+e.g. **/297c2dc5-cc47-4afd-8ec8-74990b8761e9**</td>
+
+</tr>
+
+<tr>
+
+<td>Modified After</td>
+
+<td>The ModifiedAfter filter is actually an HTTP header: &rsquo;**If-Modified-Since**&rsquo;. A UTC timestamp (yyyy-mm-ddThh:mm:ss) . Only accounts created or modified since this timestamp will be returned e.g. 2009-11-12T00:00:00</td>
+
+</tr>
+
+<tr>
+
+<td>Where</td>
+
+<td>Filter by an any element (_see [Filters](http://xerodev.wpengine.com/documentation/getting-started/http-requests-and-responses/#title3)_)</td>
+
+</tr>
+
+<tr>
+
+<td>order</td>
+
+<td>Order by any element returned (_see [Order By](http://xerodev.wpengine.com/documentation/getting-started/http-requests-and-responses/#title5)_)</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+<h4 id="example-response-for-get-accounts">Example response for GET Accounts</h4>
+
+<p>[code language=&ldquo;xml&rdquo;] <Accounts> <Account> <AccountID>297c2dc5-cc47-4afd-8ec8-74990b8761e9</AccountID> <Code/> <Name>BNZ Cheque Account</Name> <Type>BANK</Type> <TaxType>NONE</TaxType> <EnablePaymentsToAccount>false</EnablePaymentsToAccount> <BankAccountNumber>3809087654321500</BankAccountNumber> <BankAccountType>BANK</BankAccountType> <CurrencyCode>NZD</CurrencyCode> </Account> <Account> <AccountID>5040915e-8ce7-4177-8d08-fde416232f18</AccountID> <Code>200</Code> <Name>Sales</Name> <Type>REVENUE</Type> <TaxType>OUTPUT</TaxType> <Description>Income from any normal business activity</Description> <EnablePaymentsToAccount>false</EnablePaymentsToAccount> </Account> </Accounts> [/code]</p>
+
+<h4 id="example-response-for-get-accounts-297c2dc5-cc47-4afd-8ec8-74990b8761e9">Example response for GET Accounts/297c2dc5-cc47-4afd-8ec8-74990b8761e9</h4>
+
+<p>(<em>an AccountID identifier following the endpoint name</em>)</p>
+
+<p>[code language=&ldquo;xml&rdquo;] <Accounts> <Account> <AccountID>297c2dc5-cc47-4afd-8ec8-74990b8761e9</AccountID> <Code/> <Name>BNZ Cheque Account</Name> <Type>BANK</Type> <TaxType>NONE</TaxType> <EnablePaymentsToAccount>false</EnablePaymentsToAccount> <BankAccountNumber>3809087654321500</BankAccountNumber> <BankAccountType>BANK</BankAccountType> <CurrencyCode>NZD</CurrencyCode> </Account> </Accounts> [/code]</p>
+
+<hr>
+
+<p><a name="DELETE"></a>  </p>
+
+<h3 id="delete-accounts">DELETE Accounts</h3>
+
+<p>Non-system accounts and accounts not used on transactions can be deleted using the delete method. If an account is not able to be deleted you can <a href="#POST">update</a> the status to ARCHIVED DELETE /Accounts/{AccountID}</p>
 
 <h1 id="kittens">Kittens</h1>
 
